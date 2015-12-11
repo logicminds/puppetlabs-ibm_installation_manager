@@ -1,19 +1,16 @@
 #
 class ibm_installation_manager (
-  $deploy_source = false,
-  $source        = undef,
-  $target        = '/opt/IBM/InstallationManager',
-  $source_dir    = '/opt/IBM/tmp/InstallationManager',
-  $user          = 'root',
-  $group         = 'root',
-  $options       = undef,
-  $timeout       = '900',
+  Boolean $deploy_source = false,
+  $source               = undef,
+  $target               = '/opt/IBM/InstallationManager',
+  $source_dir           = '/opt/IBM/tmp/InstallationManager',
+  String $user          = 'root',
+  String $group         = 'root',
+  String $options       = '',
+  Integer $timeout      = '900',
 ) {
 
-  validate_bool($deploy_source)
   validate_absolute_path($source_dir, $target)
-  validate_string($options, $user, $group)
-  validate_integer($timeout)
 
   if $deploy_source == true and $source == undef {
     fail("${module_name} requires a source parameter to be set.")
@@ -21,7 +18,7 @@ class ibm_installation_manager (
 
   $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
 
-  if $options == undef {
+  if $options == '' {
     $_options = $options
   } else {
     $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}"
