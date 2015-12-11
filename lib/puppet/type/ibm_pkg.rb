@@ -48,6 +48,9 @@ Puppet::Type.newtype(:ibm_pkg) do
     ## multiple times as long as it's in a separate path.  The path can also
     ## have different packages installed *to* it.
     isnamevar
+    validate do |value|
+      fail("invalid name #{value}") unless value.instance_of?(String)
+    end
   end
 
   newparam(:imcl_path) do
@@ -79,7 +82,9 @@ Puppet::Type.newtype(:ibm_pkg) do
     desc "The IBM package name. Example: com.ibm.websphere.IBMJAVA.v71
     This is the first part of the traditional IBM full package name,
     before the first underscore."
-
+    validate do |value|
+      fail("invalid package #{value}") unless value.instance_of?(String)
+    end
     ## How to best validate this? Are package names consistent?
   end
 
@@ -87,7 +92,9 @@ Puppet::Type.newtype(:ibm_pkg) do
     desc "The version of the package. Example: 7.1.2000.20141116_0823
     This is the second part of the traditional IBM full package name,
     after the first underscore."
-
+    validate do |value|
+      fail("invalid version #{value}") unless value.instance_of?(String)
+    end
     ## How to best validate this?  Is the versioning consistent?
   end
 
@@ -102,8 +109,10 @@ Puppet::Type.newtype(:ibm_pkg) do
   end
 
   newparam(:options) do
-    desc "Any custom options to pass to the 'imcl' tool for installing the
-    package"
+    desc "Any custom options to pass to the 'imcl' tool for installing the package"
+    validate do |value|
+      fail("invalid options #{value}") unless value.instance_of?(String)
+    end
   end
 
   newparam(:response) do
@@ -137,11 +146,17 @@ Puppet::Type.newtype(:ibm_pkg) do
 
   newparam(:package_owner) do
     desc 'The user that should own this package installation. Only used if manage_ownership is true.'
+    validate do |value|
+      fail("invalid package_owner #{value}") unless value.instance_of?(String)
+    end
     defaultto 'root'
   end
 
   newparam(:package_group) do
     desc 'The group that should own this package installation. Only used if manage_ownership is true.'
+    validate do |value|
+      fail("invalid package_group #{value}") unless value.instance_of?(String)
+    end
     defaultto 'root'
   end
 end
