@@ -15,19 +15,19 @@ class ibm_installation_manager (
   validate_string($options, $user, $group)
   validate_integer($timeout)
 
-  if $deploy_source and ! $source {
+  if $deploy_source == true and $source == undef {
     fail("${module_name} requires a source parameter to be set.")
   }
 
   $timestamp  = chomp(generate('/bin/date', '+%Y%d%m_%H%M%S'))
 
-  if $options {
+  if $options == undef {
     $_options = $options
   } else {
     $_options = "-acceptLicense -s -log /tmp/IM_install.${timestamp}.log.xml -installationDirectory ${target}"
   }
 
-  if $deploy_source {
+  if $deploy_source == true {
     exec { "mkdir -p ${source_dir}":
       creates => $source_dir,
       path    => '/bin:/usr/bin:/sbin:/usr/sbin',
